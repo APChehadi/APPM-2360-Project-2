@@ -32,10 +32,7 @@ clear all
         % #4
         sv_q2_4 = [1; 0; 0; 0];     % susceptible state vector
         
-        five_iter_SEIR_trans_matr = SEIR_trans_matr;
-        for n = 1:4
-            five_iter_SEIR_trans_matr = five_iter_SEIR_trans_matr * SEIR_trans_matr;
-        end
+        five_iter_SEIR_trans_matr = SEIR_trans_matr ^ 5
         
         probability_q2_4 = five_iter_SEIR_trans_matr * sv_q2_4;
         
@@ -45,4 +42,88 @@ clear all
         
         
         
+%% Section 3: Stationary Probability Distributions
+
+    % 3.1 Questions
+        % #1
+            % (a)
+            sv_s = [1; 0; 0; 0];     % susceptible state vector
+            probability_s = zeros(1, 31);
+            probability_e = zeros(1, 31);
+            probability_i = zeros(1, 31);
+            probability_r = zeros(1, 31);
+
+            probability_step = zeros(4, 1);
+            for n = 1:31
+                probability_step = (SEIR_trans_matr ^ n) * sv_s;
+                probability_step = probability_step / sum(probability_step);
+                probability_s(n) = probability_step(1);
+                probability_e(n) = probability_step(2);
+                probability_i(n) = probability_step(3);
+                probability_r(n) = probability_step(4);
+            end
+
+            figure(1)
+            hold on
+            step_count = linspace(1, 31, 31);
+            plot(step_count, probability_s, "-r");
+            plot(step_count, probability_e, "-g");
+            plot(step_count, probability_i, "-b");
+            plot(step_count, probability_r, "-k");
+            legend("Susceptible", "Exposed", "Infected", "Recovered");
+            title("Probability of being in each state on a given day");
+            xlabel("Days");
+            ylabel("Probability");
+            xlim([1, 31]);
+            hold off
+            
+            
+            % (b)
+            stat_dist = [probability_s(31); probability_e(31); probability_i(31); probability_r(31)];
+            
+            disp("Stationary distribution:");
+            disp(stat_dist);
+            
+            
+        % #2
+            % (a)
+            p2_sv_s = [0.15; 0.85; 0; 0];
+            p2_probability_s = zeros(1, 31);
+            p2_probability_e = zeros(1, 31);
+            p2_probability_i = zeros(1, 31);
+            p2_probability_r = zeros(1, 31);
+
+            p2_probability_step = zeros(4, 1);
+            for n = 1:31
+                p2_probability_step = (SEIR_trans_matr ^ n) * p2_sv_s;
+                p2_probability_step = p2_probability_step / sum(p2_probability_step);
+                p2_probability_s(n) = p2_probability_step(1);
+                p2_probability_e(n) = p2_probability_step(2);
+                p2_probability_i(n) = p2_probability_step(3);
+                p2_probability_r(n) = p2_probability_step(4);
+            end
+
+            figure(2)
+            hold on
+            plot(step_count, p2_probability_s, "-r");
+            plot(step_count, p2_probability_e, "-g");
+            plot(step_count, p2_probability_i, "-b");
+            plot(step_count, p2_probability_r, "-k");
+            legend("Susceptible", "Exposed", "Infected", "Recovered");
+            title("Probability of being in each state on a given day");
+            xlabel("Days");
+            ylabel("Probability");
+            xlim([1, 31]);
+            hold off
+            
+            
+            % (b)
+            p2_stat_dist = [p2_probability_s(31); p2_probability_e(31); p2_probability_i(31); p2_probability_r(31)];
+            
+            disp("Stationary distribution:");
+            disp(p2_stat_dist);
+            
+            
+            
+            
         
