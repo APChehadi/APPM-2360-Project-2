@@ -8,7 +8,7 @@ clear all
         % #2
         P_s = 0.7;
         P_e = 0.4;
-        P_i = 1;
+        P_i = 1.0;
         P_r = 0.8;
 
         SEIR_trans_matr = [P_s          P_e              0            (1 - P_r)
@@ -123,6 +123,80 @@ clear all
             disp("Stationary distribution:");
             disp(p2_stat_dist);
             
+            
+        % #4
+            % (a)
+            % I don't know
+            
+            
+            % (b)
+            % I don't know
+            
+            
+            % (c)
+            % I don't know
+            
+            
+            % (d)
+            % I don't know
+            
+            
+        % #5
+            % (b)
+            P_Im = 1.0;
+            
+            SEIR_Im_trans_matr = [P_s          P_e              0            0.5*(1 - P_r)    0
+                                  (1 - P_s)    0                0            0                0
+                                  0            0.5*(1 - P_e)    (1 - P_i)    0                0
+                                  0            0.5*(1 - P_e)    P_i          P_r              0
+                                  0            0                0            0.5*(1 - P_r)    P_Im];
+                              
+            disp("Transition matrix for Markov Chain of the SEIR-Im model:");
+            disp(SEIR_Im_trans_matr);
+            
+            
+            % (c)
+            p3_sv_s = [1; 0; 0; 0; 0];
+            p3_probability_s = zeros(1, 250);
+            p3_probability_e = zeros(1, 250);
+            p3_probability_i = zeros(1, 250);
+            p3_probability_r = zeros(1, 250);
+            p3_probability_Im = zeros(1, 250);
+
+            p3_probability_step = zeros(5, 1);
+            for n = 1:250
+                p3_probability_step = (SEIR_Im_trans_matr ^ n) * p3_sv_s;
+                p3_probability_step = p3_probability_step / sum(p3_probability_step);
+                p3_probability_s(n) = p3_probability_step(1);
+                p3_probability_e(n) = p3_probability_step(2);
+                p3_probability_i(n) = p3_probability_step(3);
+                p3_probability_r(n) = p3_probability_step(4);
+                p3_probability_Im(n) = p3_probability_step(5);
+            end
+
+            figure(4)
+            hold on
+            step_count_250 = linspace(1, 250, 250);
+            plot(step_count_250, p3_probability_s, "-r");
+            plot(step_count_250, p3_probability_e, "-g");
+            plot(step_count_250, p3_probability_i, "-b");
+            plot(step_count_250, p3_probability_r, "-k");
+            plot(step_count_250, p3_probability_Im, "-m");
+            legend("Susceptible", "Exposed", "Infected", "Recovered", "Immune");
+            title("Probability of being in each SEIR-Im state on a given day");
+            xlabel("Days");
+            ylabel("Probability");
+            xlim([1, 250]);
+            hold off
+            
+            SEIR_Im_stat_dist = [p3_probability_s(250)
+                                 p3_probability_e(250)
+                                 p3_probability_i(250) 
+                                 p3_probability_r(250)
+                                 p3_probability_Im(250)];
+            
+            disp("Stationary distribution:");
+            disp(SEIR_Im_stat_dist);
             
             
             
