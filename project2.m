@@ -126,11 +126,25 @@ clear all
             
         % #4
             % (a)
-            % I don't know
+            sv_x0 = [0.15; 0.85; 0; 0];
             
             
             % (b)
-            % I don't know
+            [V, D] = eig(SEIR_trans_matr);
+            
+            eigen_vects = V(1:4, 3);
+            eigen_vals = [D(1);
+                          D(2);
+                          D(11);
+                          D(16)];
+            
+            c = V \ sv_x0;
+            c = c(3);
+            
+            sv_xN = c * eigen_vects;
+            
+            disp("N-step state vector xN of the Markov Chain in terms of the transition matrix's eigenvalues/eigenvectors:");
+            disp(sv_xN);
             
             
             % (c)
@@ -138,7 +152,37 @@ clear all
             
             
             % (d)
-            % I don't know
+            p4_abs_error_s = zeros(1, 31);
+            p4_abs_error_e = zeros(1, 31);
+            p4_abs_error_i = zeros(1, 31);
+            p4_abs_error_r = zeros(1, 31);
+
+            p4_probability_step = zeros(4, 1);
+            p4_abs_error = zeros(4, 31)
+            for n = 1:31
+                p4_probability_step = (SEIR_trans_matr ^ n) * sv_x0;
+                p4_probability_step = p4_probability_step / sum(p4_probability_step);
+                p4_abs_error(1:4, n) = abs(sv_xN - p4_probability_step);
+                p4_abs_error_s(n) = p4_abs_error(1, n);
+                p4_abs_error_e(n) = p4_abs_error(2, n);
+                p4_abs_error_i(n) = p4_abs_error(3, n);
+                p4_abs_error_r(n) = p4_abs_error(4, n);
+            end
+
+            figure(3)
+            hold on
+            semilogy(step_count, p4_abs_error_s, "-r");
+            semilogy(step_count, p4_abs_error_e, "-g");
+            semilogy(step_count, p4_abs_error_i, "-b");
+            semilogy(step_count, p4_abs_error_r, "-k");
+            legend("Abs Error Susceptible", "Abs Error Exposed", "Abs Error Infected", "Abs Error Recovered");
+            title("Absolute Error In Stationary Distribution Against Iteration Step");
+            xlabel("Days");
+            ylabel("Absolute Error");
+            xlim([1, 31]);
+            hold off
+            
+         
             
             
         % #5
