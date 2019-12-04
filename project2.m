@@ -249,7 +249,135 @@ clear all
 
     % 4.1 Questions
         % #1
-        blah
-            
-            
+        SEIR_VIm_trans_matr = [0.7    0      0      0.2    0       0
+                               0.3    0      0      0      0       0
+                               0      0.5    0      0      0       0
+                               0      0.5    1.0    0.8    0       0
+                               0      0      0      0      0.25    0
+                               0      0      0      0      0.75    1.0];
+                           
+        disp("Transition matrix for Markov Chain of the SEIR-VIm model:");
+        disp(SEIR_VIm_trans_matr);
+        
+        
+        % #2
+        syms x;
+        eqn = det(SEIR_VIm_trans_matr - x*eye(6));
+        values = double(solve(eqn, x));
+                           
+        multiplicty = 0;
+        for n = 1:6
+            if values(n) == 1
+                multiplicty = multiplicty + 1;
+            end
+        end
+        
+        disp("Multiplicity of the eigenvalue 1:");
+        disp(multiplicty);
+        
+        disp("Having a multiplity of 2 implies there are 2 unique stationary distributions.");
+        
+        disp('The structural features of the SEIR-VIm transition matrix that account for the 2');
+        disp('unique stationary distributions are the fifth and six columns of the transition matrix.');
+        disp('They do not contain values for rows 1-4, causing them to be indpendent from columns 1-4.');
+        
+        
+        % #3
+        p3_sv_s = [1; 0; 0; 0; 0; 0];
+        p3_probability_s = zeros(1, 31);
+        p3_probability_e = zeros(1, 31);
+        p3_probability_i = zeros(1, 31);
+        p3_probability_r = zeros(1, 31);
+        p3_probability_v = zeros(1, 31);
+        p3_probability_Im = zeros(1, 31);
+
+        p3_probability_step = zeros(6, 1);
+        for n = 1:31
+            p3_probability_step = (SEIR_VIm_trans_matr ^ n) * p3_sv_s;
+            p3_probability_step = p3_probability_step / sum(p3_probability_step);
+            p3_probability_s(n) = p3_probability_step(1);
+            p3_probability_e(n) = p3_probability_step(2);
+            p3_probability_i(n) = p3_probability_step(3);
+            p3_probability_r(n) = p3_probability_step(4);
+            p3_probability_v(n) = p3_probability_step(5);
+            p3_probability_Im(n) = p3_probability_step(6);
+        end
+
+        figure(5)
+        hold on
+        plot(step_count, p3_probability_s, "-r");
+        plot(step_count, p3_probability_e, "-g");
+        plot(step_count, p3_probability_i, "-b");
+        plot(step_count, p3_probability_r, "-k");
+        plot(step_count, p3_probability_v, "-c");
+        plot(step_count, p3_probability_Im, "-m");
+        legend("Susceptible", "Exposed", "Infected", "Recovered", "Vaccinated", "Immune");
+        title("Probability of being in each SEIR-VIm state on a given day");
+        xlabel("Days");
+        ylabel("Probability");
+        xlim([1, 31]);
+        hold off
+
+        SEIR_VIm_stat_dist = [p3_probability_s(31)
+                             p3_probability_e(31)
+                             p3_probability_i(31) 
+                             p3_probability_r(31)
+                             p3_probability_v(31)
+                             p3_probability_Im(31)];
+
+        disp("Stationary distribution:");
+        disp(SEIR_VIm_stat_dist);
+        
+        
+        % #4
+        p4_sv_s = [0.33; 0; 0; 0; 0.67; 0];
+        p4_probability_s = zeros(1, 31);
+        p4_probability_e = zeros(1, 31);
+        p4_probability_i = zeros(1, 31);
+        p4_probability_r = zeros(1, 31);
+        p4_probability_v = zeros(1, 31);
+        p4_probability_Im = zeros(1, 31);
+
+        p4_probability_step = zeros(6, 1);
+        for n = 1:31
+            p4_probability_step = (SEIR_VIm_trans_matr ^ n) * p4_sv_s;
+            p4_probability_step = p4_probability_step / sum(p4_probability_step);
+            p4_probability_s(n) = p4_probability_step(1);
+            p4_probability_e(n) = p4_probability_step(2);
+            p4_probability_i(n) = p4_probability_step(3);
+            p4_probability_r(n) = p4_probability_step(4);
+            p4_probability_v(n) = p4_probability_step(5);
+            p4_probability_Im(n) = p4_probability_step(6);
+        end
+
+        figure(6)
+        hold on
+        plot(step_count, p4_probability_s, "-r");
+        plot(step_count, p4_probability_e, "-g");
+        plot(step_count, p4_probability_i, "-b");
+        plot(step_count, p4_probability_r, "-k");
+        plot(step_count, p4_probability_v, "-c");
+        plot(step_count, p4_probability_Im, "-m");
+        legend("Susceptible", "Exposed", "Infected", "Recovered", "Vaccinated", "Immune");
+        title("Probability of being in each SEIR-VIm state on a given day");
+        xlabel("Days");
+        ylabel("Probability");
+        xlim([1, 31]);
+        hold off
+
+        SEIR_VIm_stat_dist = [p4_probability_s(31)
+                             p4_probability_e(31)
+                             p4_probability_i(31) 
+                             p4_probability_r(31)
+                             p4_probability_v(31)
+                             p4_probability_Im(31)];
+
+        disp("Stationary distribution:");
+        disp(SEIR_VIm_stat_dist);
+        
+        
+        % #5
+        disp('blah');
+        disp('blah');
+        disp('blah');
         
