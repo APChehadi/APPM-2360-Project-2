@@ -158,10 +158,11 @@ clear all
             p4_abs_error_r = zeros(1, 31);
 
             p4_probability_step = zeros(4, 1);
-            p4_abs_error = zeros(4, 31)
+            p4_abs_error = zeros(4, 31);
             for n = 1:31
                 p4_probability_step = (SEIR_trans_matr ^ n) * sv_x0;
                 p4_probability_step = p4_probability_step / sum(p4_probability_step);
+                
                 p4_abs_error(1:4, n) = abs(sv_xN - p4_probability_step);
                 p4_abs_error_s(n) = p4_abs_error(1, n);
                 p4_abs_error_e(n) = p4_abs_error(2, n);
@@ -295,6 +296,7 @@ clear all
         for n = 1:31
             p3_probability_step = (SEIR_VIm_trans_matr ^ n) * p3_sv_s;
             p3_probability_step = p3_probability_step / sum(p3_probability_step);
+            
             p3_probability_s(n) = p3_probability_step(1);
             p3_probability_e(n) = p3_probability_step(2);
             p3_probability_i(n) = p3_probability_step(3);
